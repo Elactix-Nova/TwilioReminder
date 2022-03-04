@@ -37,11 +37,11 @@ def option1(body):
         else:
             resp.message('Reminder successfully added', action="/MessageStatus")
             reminder = {
-                'id': uuid.uuid4().hex,
                 'phone_number': body[0],
                 'message': body[1],
                 'due_date': body[2]
             }
-            create_reminder_json(reminder)
+            reminder_id = uuid.uuid4().hex
+            create_reminder_json(reminder, reminder_id)
 
     return str(resp)

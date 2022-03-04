@@ -1,5 +1,5 @@
 import os
-from reminder_json_helper import read_reminder_json, write_reminder_json
+from reminder_json_helper import read_reminder_json, delete_reminder_json
 from datetime import date
 from twilio.rest import Client
 import time
@@ -29,14 +29,7 @@ def send_sms_reminder(reminders):
             body=reminder['message'],
             from_=f"{twilio_from}",
             to=f"{to_phone_number}")
-        update_due_date(reminder)
+        delete_reminder_json(reminder["id"])
         time.sleep(30)
-
-def update_due_date(reminder):
-    reminders = read_reminder_json()
-    data = {}
-    reminders.remove(reminder)
-    data['reminders'] = reminders
-    write_reminder_json(data)
 
 find_reminders_due()

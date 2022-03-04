@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, abort
-from reminder_json_helper import read_reminder_json, create_reminder_json, write_reminder_json
+from reminder_json_helper import read_reminder_json, create_reminder_json, delete_reminder_json
 import uuid
 from sms import option1
 
@@ -24,13 +24,12 @@ def create_reminder():
         abort(400)
 
     reminder = {
-        'id': uuid.uuid4().hex,
         'phone_number': req_data['phone_number'],
         'message': req_data['message'],
         'due_date': req_data['due_date']
     }
-
-    create_reminder_json(reminder)
+    reminder_id = uuid.uuid4().hex
+    create_reminder_json(reminder, reminder_id)
     return jsonify({'reminder': reminder}), 201
 
 
@@ -41,17 +40,11 @@ def bad_request(error):
 
 @app.route('/api/<reminder_id>', methods=['DELETE'])
 def delete_reminder(reminder_id):
-    reminders = read_reminder_json()
-    reminder = [
-        reminder for reminder in reminders if reminder['id'] == reminder_id
-    ]
-    if len(reminder) == 0:
+    val = delete_reminder_json(reminder_id)
+    if val==False:
         abort(404)
-    reminders.remove(reminder[0])
-    data = {}
-    data['reminders'] = reminders
-    write_reminder_json(data)
-    return jsonify({'message': 'Reminder has been removed successfully'})
+    else:
+        return jsonify({'message': 'Reminder has been removed successfully'})
 
 @app.route("/api/message", methods=['GET'])
 def post_sms():

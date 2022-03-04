@@ -1,35 +1,35 @@
 import os
-import json
+import pyrebase
+from dotenv import load_dotenv
 
-def reminder_json_exists():
-    return os.path.isfile('reminder.json')
+load_dotenv()
+
+config = {
+  "apiKey": os.environ.get("apiKey"),
+  "authDomain": os.environ.get("authDomain"),
+  "databaseURL": os.environ.get("databaseURL"),
+  "storageBucket": os.environ.get("storageBucket"),
+  "serviceAccount": os.environ.get("serviceAccount")
+}
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
 
 def read_reminder_json():
-    if reminder_json_exists():
-       with open('reminder.json') as reminder_json:
-            data = json.load(reminder_json)
-            return data['reminders']
-    else: 
-        return {}
+    data = db.child("reminders").get()
+    return data.val()
 
-def create_reminder_json(reminder):
-    if not reminder_json_exists():
-        data = {}
-        data['reminders'] = []
-        data['reminders'].append(reminder)
-        write_reminder_json(data)
-    else: 
-        update_reminder_json(reminder)
+def create_reminder_json(reminder, reminder_id):
+    data = db.child("reminders").get()
+    db.child("reminders").child(str(reminder_id)).set(reminder)
 
-
-def update_reminder_json(reminder):
-    with open('reminder.json') as reminder_json:
-        data = json.load(reminder_json)
-        reminders = data['reminders']
-        reminders.append(reminder)
-        write_reminder_json(data)
-
-def write_reminder_json(data):
-    with open('reminder.json', 'w') as outfile:
-        json.dump(data, outfile, indent=4)
-
+def delete_reminder_json(reminder_id):
+    data = db.child("reminders").get().val()
+    keys = list(data)
+    for i in keys:
+        if i==reminder_id:
+            db.child("reminders").child(i).remove()
+            return True
+            break
+    else:
+        return False
