@@ -123,11 +123,11 @@ If the web-server does not run successfully, then you can check the logs for you
 
 The most common troubleshooting step is to check whether the dyno formation window in the overview tab, shows the command to be run at startup of web-server.
   
-If the window is blank, then check whether your repository has a "Procfile" with the following content and save it to the root directory
+If the window is blank, then check whether your repository has a "Procfile" with the following content.
 
 `web gunicorn --bind 0.0.0.0:$PORT main:app`  
 
-If not then you can create it, commit to your repository and deploy to Heroku once again, which should then work correctly.
+If not then you can create it in the root of your directory, commit to your repository and deploy to Heroku once again, which should then work correctly.
 
 ## Dependencies
 
