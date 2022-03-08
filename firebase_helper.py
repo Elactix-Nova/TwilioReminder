@@ -9,7 +9,7 @@ config = {
   "authDomain": os.environ.get("authDomain"),
   "databaseURL": os.environ.get("databaseURL"),
   "storageBucket": os.environ.get("storageBucket"),
-  "serviceAccount": os.environ.get("serviceAccount")
+  "serviceAccount": "cert.json"
 }
 
 firebase = pyrebase.initialize_app(config)

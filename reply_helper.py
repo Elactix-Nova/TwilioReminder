@@ -1,8 +1,7 @@
 import datetime
 from twilio.twiml.messaging_response import MessagingResponse
 import uuid
-from reminder_json_helper import create_reminder_json
-#from main import return_status
+from firebase_helper import create_reminder_json
 
 def check_date(date):
     year, month, day = [int(i) for i in date.split('-')]
@@ -23,7 +22,7 @@ def check_number(phone_number):
         correctNumber = False
     return correctNumber
 
-def option1(body):
+def respond(body):
     resp = MessagingResponse()
     
     body=body.split('\n')
